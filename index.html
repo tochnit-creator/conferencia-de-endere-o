@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Conferência da rota montada</title>
+<title>Conferência de endereço na observação</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -13,9 +13,9 @@
     --tela:#F5F6F7; --cartao:#FFFFFF; --borda:#E7E9EC; --borda-fraca:#F1F2F4; --sutil:#FAFBFB;
     --tinta:#191C1F; --tinta-2:#616870; --tinta-3:#98A0A8;
     --acento:#31506F; --acento-fraco:#EFF3F7;
-    --cr:#A3423C; --cr-bg:#FDF7F6; --cr-bd:#EEDCD9; --cr-mk:#F8E4E1;
+    --cr:#A3423C; --cr-bg:#FDF7F6; --cr-bd:#EEDCD9;
     --at:#8A6520; --at-bg:#FDFAF5; --at-bd:#EDE2CD;
-    --ok:#2C6E52; --ok-bg:#F3F8F5; --ok-bd:#D6E8DF; --ok-mk:#E7F2EC;
+    --ok:#2C6E52; --ok-bg:#F3F8F5; --ok-bd:#D6E8DF;
     --nt:#4A5A6B; --nt-bg:#F6F8F9; --nt-bd:#E1E6EA;
     --s1:0 1px 2px rgba(16,24,40,.05);
     --s2:0 1px 2px rgba(16,24,40,.04), 0 4px 12px -4px rgba(16,24,40,.06);
@@ -29,6 +29,12 @@
   .quadro{max-width:1140px;margin:0 auto;padding:0 20px 72px}
   .oculto{display:none !important}
   button{font:inherit;color:inherit}
+
+  @keyframes entra{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  @keyframes halo-c{0%{box-shadow:0 0 0 0 rgba(163,66,60,.30)}70%{box-shadow:0 0 0 9px rgba(163,66,60,0)}100%{box-shadow:0 0 0 0 rgba(163,66,60,0)}}
+  @keyframes halo-a{0%{box-shadow:0 0 0 0 rgba(138,101,32,.26)}70%{box-shadow:0 0 0 9px rgba(138,101,32,0)}100%{box-shadow:0 0 0 0 rgba(138,101,32,0)}}
+  @keyframes piscar{0%,100%{opacity:1}50%{opacity:.2}}
+  @keyframes varre{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
   .barra{display:flex;align-items:center;gap:13px;padding:16px 0;flex-wrap:wrap}
   .glifo{width:27px;height:27px;border-radius:8px;background:var(--acento);display:grid;place-items:center;flex:none;box-shadow:var(--s1)}
@@ -55,11 +61,11 @@
   .inicio .ic{width:42px;height:42px;border-radius:11px;background:var(--acento-fraco);display:grid;place-items:center;margin:0 auto 16px}
   .inicio .ic svg{width:19px;height:19px;stroke:var(--acento);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .inicio h2{font-size:15px;font-weight:600;letter-spacing:-.015em}
-  .inicio p{font-size:12.5px;color:var(--tinta-2);margin:6px auto 20px;max-width:430px}
-  .exige{margin:24px auto 0;max-width:490px;border-top:1px solid var(--borda-fraca);padding-top:16px;display:grid;gap:8px;text-align:left}
+  .inicio p{font-size:12.5px;color:var(--tinta-2);margin:6px auto 20px;max-width:440px}
+  .exige{margin:24px auto 0;max-width:500px;border-top:1px solid var(--borda-fraca);padding-top:16px;text-align:left}
   .exige .lin{display:flex;gap:10px;align-items:baseline;font-size:11px;min-width:0}
   .exige .ab{font-family:var(--dado);background:var(--tela);border:1px solid var(--borda);border-radius:5px;padding:1px 6px;flex:none;font-size:10.5px}
-  .exige .cl{color:var(--tinta-3);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .exige .cl{color:var(--tinta-3);font-size:11px}
 
   .indicadores{display:grid;grid-template-columns:repeat(5,1fr);background:var(--cartao);border:1px solid var(--borda);
                border-radius:14px;box-shadow:var(--s2);overflow:hidden;margin-top:8px}
@@ -85,12 +91,6 @@
               border:1px solid var(--borda);border-radius:20px;padding:1px 8px}
   .cab-sec .dica{margin-left:auto;font-size:11px;color:var(--tinta-3)}
 
-  @keyframes entra{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-  @keyframes halo-c{0%{box-shadow:0 0 0 0 rgba(163,66,60,.30)}70%{box-shadow:0 0 0 9px rgba(163,66,60,0)}100%{box-shadow:0 0 0 0 rgba(163,66,60,0)}}
-  @keyframes halo-a{0%{box-shadow:0 0 0 0 rgba(138,101,32,.26)}70%{box-shadow:0 0 0 9px rgba(138,101,32,0)}100%{box-shadow:0 0 0 0 rgba(138,101,32,0)}}
-  @keyframes piscar{0%,100%{opacity:1}50%{opacity:.2}}
-  @keyframes varre{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-
   .aviso{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;box-shadow:var(--s2);
          padding:16px;margin-bottom:9px;display:grid;grid-template-columns:34px 1fr;gap:13px;
          transition:box-shadow .16s,border-color .16s;animation:entra .38s cubic-bezier(.2,.7,.3,1) both;
@@ -100,7 +100,6 @@
   .aviso.c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cr)}
   .aviso.a{border-color:var(--at-bd)}
   .aviso.a::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--at)}
-
   .selo-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
   .selo-ic svg{width:16px;height:16px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .aviso.c .selo-ic{background:var(--cr-bg);border:1px solid var(--cr-bd);animation:halo-c 2s ease-out infinite}
@@ -108,7 +107,6 @@
   .aviso.a .selo-ic{background:var(--at-bg);border:1px solid var(--at-bd);animation:halo-a 2.6s ease-out infinite}
   .aviso.a .selo-ic svg{stroke:var(--at)}
   .aviso.n .selo-ic{background:var(--nt-bg);border:1px solid var(--nt-bd)} .aviso.n .selo-ic svg{stroke:var(--nt)}
-
   .corpo{min-width:0}
   .linha1{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
   .ped{font-family:var(--dado);font-size:13.5px;font-weight:500;letter-spacing:-.02em}
@@ -121,21 +119,16 @@
   .aviso.n .grau .pt{animation:none}
   .cli{font-size:12.5px;color:var(--tinta-2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-  /* banner de ação */
   .banner{margin-top:12px;border:1px solid;border-left-width:3px;border-radius:10px;padding:12px 14px;
           display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;position:relative;overflow:hidden}
   .banner .bic{width:16px;height:16px;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
   .frase{font-size:14px;font-weight:600;letter-spacing:-.012em;line-height:1.4}
   .porque{font-size:12px;margin-top:4px;opacity:.82;font-weight:450}
   .banner::after{content:"";position:absolute;inset:0;pointer-events:none;
-                 background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-                 animation:varre 3.4s ease-in-out infinite}
-  .aviso.c .banner{color:var(--cr);background:var(--cr-bg);border-color:var(--cr-bd)}
-  .aviso.c .banner .bic{stroke:var(--cr)}
-  .aviso.a .banner{color:var(--at);background:var(--at-bg);border-color:var(--at-bd)}
-  .aviso.a .banner .bic{stroke:var(--at)}
-  .aviso.n .banner{color:var(--nt);background:var(--nt-bg);border-color:var(--nt-bd)}
-  .aviso.n .banner .bic{stroke:var(--nt)}
+                 background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:varre 3.4s ease-in-out infinite}
+  .aviso.c .banner{color:var(--cr);background:var(--cr-bg);border-color:var(--cr-bd)} .aviso.c .banner .bic{stroke:var(--cr)}
+  .aviso.a .banner{color:var(--at);background:var(--at-bg);border-color:var(--at-bd)} .aviso.a .banner .bic{stroke:var(--at)}
+  .aviso.n .banner{color:var(--nt);background:var(--nt-bg);border-color:var(--nt-bd)} .aviso.n .banner .bic{stroke:var(--nt)}
   .aviso.n .banner::after{animation:none}
 
   .trilho{margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:var(--sutil);
@@ -148,25 +141,50 @@
   .trilho.err .bl.org .vl{color:var(--cr);text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:var(--cr-bd)}
   .trilho.ok .bl.org .vl{color:var(--ok)}
 
-  .cmp{margin-top:12px;border:1px solid var(--borda);border-radius:10px;display:grid;
-       grid-template-columns:1fr auto 1fr;align-items:stretch;overflow:hidden}
-  .lado{padding:11px 13px;background:var(--cartao);min-width:0}
-  .lado.foco{background:var(--cr-bg)}
-  .lado .cab{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;margin-bottom:6px;
-             display:flex;align-items:center;gap:5px}
-  .lado .cab b{font-weight:500;color:var(--tinta-2);font-family:var(--dado);font-size:9px}
-  .lado .txt{font-family:var(--dado);font-size:11.5px;line-height:1.75;word-break:break-word}
-  .meio{width:28px;background:var(--sutil);border-left:1px solid var(--borda);border-right:1px solid var(--borda);
-        display:grid;place-items:center;font-size:11px;color:var(--tinta-3);font-family:var(--dado)}
-  .lado mark{background:var(--cr-mk);color:var(--cr);padding:1px 3px;border-radius:3px;font-weight:500}
-  .lado em{background:var(--ok-mk);color:var(--ok);font-style:normal;padding:1px 3px;border-radius:3px}
+  /* confronto: observação × cadastro */
+  .conf{margin-top:12px;border:1px solid var(--borda);border-radius:10px;overflow:hidden}
+  .conf .cab,.conf .lin{display:grid;grid-template-columns:78px 1fr 26px 1fr;align-items:center}
+  .conf .cab{background:var(--sutil);border-bottom:1px solid var(--borda-fraca);padding:7px 12px}
+  .conf .cab span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500}
+  .conf .lin{padding:9px 12px;border-bottom:1px solid var(--borda-fraca)}
+  .conf .lin:last-child{border-bottom:none}
+  .conf .rot{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--tinta-3);font-weight:500}
+  .conf .vl{font-family:var(--dado);font-size:11.5px;word-break:break-word;min-width:0}
+  .conf .vl.vazio{color:var(--tinta-3)}
+  .conf .sin{display:grid;place-items:center;font-family:var(--dado);font-size:11px;font-weight:500}
+  .conf .sin.ig{color:var(--ok)} .conf .sin.df{color:var(--cr)} .conf .sin.nd{color:var(--tinta-3)}
+  .conf .lin.df .vl:first-of-type,.conf .lin.df .vl:last-of-type{color:var(--cr)}
+  .conf .lin.ig .vl{color:var(--ok)}
+  .conf .lin.end .vl{color:var(--tinta)}
   @media(max-width:780px){
-    .cmp{grid-template-columns:1fr}
-    .meio{width:auto;height:24px;border:none;border-top:1px solid var(--borda);border-bottom:1px solid var(--borda)}
+    .conf .cab{display:none}
+    .conf .lin{grid-template-columns:1fr;gap:3px;padding:10px 12px}
+    .conf .sin{display:none}
     .indicadores{grid-template-columns:repeat(2,1fr)}
     .ind{border-bottom:1px solid var(--borda-fraca)}
     .aviso{grid-template-columns:1fr}.selo-ic{display:none}
   }
+
+  /* cidade informada à mão */
+  .manual{margin-top:12px;border:1px dashed #D8DDE3;border-radius:10px;padding:11px 12px;background:var(--sutil)}
+  .manual .mlb{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;margin-bottom:8px}
+  .mrow{display:flex;gap:7px;flex-wrap:wrap}
+  .minput{flex:1;min-width:180px;border:1px solid var(--borda);border-radius:7px;padding:6px 9px;
+          font-family:var(--ui);font-size:12px;background:#fff;color:var(--tinta)}
+  .minput::placeholder{color:var(--tinta-3)}
+  .minput:focus{outline:none;border-color:var(--acento)}
+  .chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--borda);background:#fff;border-radius:20px;
+        padding:4px 11px;font-size:11px;color:var(--tinta-2);cursor:pointer;margin-top:9px;transition:border-color .14s,color .14s}
+  .chip:hover{border-color:var(--acento);color:var(--acento)}
+  .chip b{font-family:var(--dado);font-size:10.5px;color:var(--tinta);font-weight:500}
+  .tag-man{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.03em;font-weight:450;color:var(--acento);
+           background:var(--acento-fraco);border:1px solid #DBE4ED;border-radius:20px;padding:3px 6px 3px 11px;margin-top:11px}
+  .tag-man b{font-family:var(--dado);font-size:11px;font-weight:500}
+  .tag-man button{border:none;background:none;cursor:pointer;color:var(--acento);opacity:.55;font-size:14px;
+                  line-height:1;padding:0 5px;border-radius:20px}
+  .tag-man button:hover{opacity:1;background:#E2EAF2}
+  .conf .mm{font-style:normal;font-family:var(--ui);font-size:9px;letter-spacing:.05em;text-transform:uppercase;
+            color:var(--acento);background:var(--acento-fraco);border:1px solid #DBE4ED;border-radius:4px;padding:0 4px;margin-left:5px}
 
   .painel{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;box-shadow:var(--s2);overflow:hidden}
   .ferramentas{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--borda-fraca);flex-wrap:wrap}
@@ -177,7 +195,7 @@
   .busca::placeholder{color:var(--tinta-3)}
   .busca:focus{outline:none;border-color:var(--acento);background:#fff}
   .rolagem{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;min-width:900px}
+  table{width:100%;border-collapse:collapse;min-width:940px}
   thead th{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;text-align:left;
            padding:9px 12px;background:var(--sutil);border-bottom:1px solid var(--borda-fraca);position:sticky;top:0;z-index:2}
   tbody td{padding:9px 12px;border-bottom:1px solid var(--borda-fraca);vertical-align:middle}
@@ -191,7 +209,6 @@
   .pil.a{color:var(--at);border-color:var(--at-bd);background:var(--at-bg)} .pil.a .pt{background:var(--at)}
   .pil.k{color:var(--ok);border-color:var(--ok-bd);background:var(--ok-bg)} .pil.k .pt{background:var(--ok)}
   .pil.n{color:var(--nt);border-color:var(--nt-bd);background:var(--nt-bg)} .pil.n .pt{background:var(--nt)}
-  .pil.z{color:var(--tinta-3);border-color:var(--borda);background:var(--tela)} .pil.z .pt{background:var(--tinta-3)}
   .nada{padding:30px;text-align:center;color:var(--tinta-3);font-size:12px}
   .nada.calmo{background:var(--cartao);border:1px solid var(--borda);border-radius:12px;box-shadow:var(--s1)}
   .erro{background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:12px;padding:14px 16px;margin-top:8px;font-size:12.5px}
@@ -211,8 +228,8 @@
   <div class="barra">
     <div class="glifo"><svg viewBox="0 0 24 24"><path d="M4 7h7M4 12h5M4 17h7"/><path d="M15 5l5 5-5 5"/><path d="M20 10h-7"/></svg></div>
     <div class="tit">
-      <h1>Conferência da rota montada</h1>
-      <p>Endereço da aba rotas × Observação Interna da central de vendas</p>
+      <h1>Conferência de endereço na observação</h1>
+      <p>Observação Interna × CEP e Cidade do pedido · aba centralde vendas</p>
     </div>
     <div class="direita">
       <div class="ficha oculto" id="ficha">
@@ -229,15 +246,15 @@
 
   <div class="inicio" id="inicio">
     <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></div>
-    <h2>Importe a planilha para conferir a rota</h2>
+    <h2>Importe a planilha para conferir</h2>
     <p>A leitura acontece no seu navegador. O arquivo não sai daqui.</p>
     <label class="btn" for="arquivo">
       <svg viewBox="0 0 24 24"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
       Importar planilha
     </label>
     <div class="exige">
-      <div class="lin"><span class="ab">rotas</span><span class="cl">o que será conferido — N.Ped. · Cliente · Endereço</span></div>
-      <div class="lin"><span class="ab">centralde vendas</span><span class="cl">a referência — Pedido · Observação Interna · Rota · CEP · Cidade</span></div>
+      <div class="lin"><span class="ab">centralde vendas</span>
+        <span class="cl">Pedido · Cliente · Rota · Observação Interna · CEP · Cidade</span></div>
     </div>
   </div>
 
@@ -253,8 +270,8 @@
     </section>
 
     <section id="sec-at">
-      <div class="cab-sec"><h3>Endereço do romaneio divergente</h3><span class="n" id="n-at"></span>
-        <span class="dica">a rota está certa, o endereço impresso não</span></div>
+      <div class="cab-sec"><h3>Endereço diferente do cadastro</h3><span class="n" id="n-at"></span>
+        <span class="dica">a rota está certa, o endereço da entrega não é o do cadastro</span></div>
       <div id="lista-at"></div>
     </section>
 
@@ -265,7 +282,7 @@
     </section>
 
     <section>
-      <div class="cab-sec"><h3>Pedidos da rota</h3><span class="n" id="n-tab"></span>
+      <div class="cab-sec"><h3>Pedidos com endereço na observação</h3><span class="n" id="n-tab"></span>
         <span class="dica"><button class="btn fino" id="csv">Baixar em CSV</button></span></div>
       <div class="painel">
         <div class="ferramentas">
@@ -276,9 +293,9 @@
         </div>
         <div class="rolagem">
           <table><thead><tr>
-            <th style="width:100px">N.Ped.</th><th style="width:20%">Cliente</th><th style="width:130px">Situação</th>
-            <th style="width:26%">Endereço na aba rotas</th><th style="width:26%">Endereço na observação</th>
-            <th style="width:115px">Rota</th><th style="width:115px">Rota sugerida</th>
+            <th style="width:100px">Pedido</th><th style="width:19%">Cliente</th><th style="width:132px">Situação</th>
+            <th style="width:28%">Endereço na observação</th><th style="width:130px">Cidade do pedido</th>
+            <th style="width:92px">CEP</th><th style="width:112px">Rota</th><th style="width:112px">Rota sugerida</th>
           </tr></thead><tbody id="corpo"></tbody></table>
         </div>
         <div class="nada oculto" id="vazio">Nenhum pedido corresponde ao filtro.</div>
@@ -286,28 +303,23 @@
     </section>
 
     <div class="rodape">
-      <b>O que é conferido.</b> Só os pedidos da aba <code>rotas</code> — é a rota que você está montando. A central de vendas entra como referência: de lá vem a Observação Interna de cada pedido e, do arquivo inteiro, a malha de rotas.<br>
-      <b>A malha</b> é aprendida na hora: para cada rota, quais cidades e faixas de CEP aparecem na central de vendas. Por isso o painel sabe dizer que uma entrega em Santo André não cabe numa rota que só passa em Mauá e São Paulo — e qual rota levaria.<br>
-      <b>Rota errada</b> é quando a área da entrega não bate com a rota do pedido. <b>Endereço do romaneio divergente</b> é quando a rota está certa mas o endereço impresso é o do cadastro, e não o que o vendedor combinou. Casamento por <code>N.Ped.</code> ↔ <code>Pedido</code>, só pelos dígitos.
+      <b>O que o painel lê.</b> Só a aba <code>centralde vendas</code>. De cada pedido ele pega a Observação Interna e, quando ela traz um endereço de entrega, compara com o <code>CEP</code> e a <code>Cidade</code> daquele mesmo pedido.<br>
+      <b>A malha de rotas</b> é aprendida no próprio arquivo: para cada rota, quais cidades e faixas de CEP aparecem. É isso que permite dizer que uma entrega em Santo André não cabe numa rota que só passa em Mauá e São Paulo — e qual rota levaria.<br>
+      <b>Rota errada</b> é quando a área da entrega não bate com a rota do pedido. <b>Endereço diferente do cadastro</b> é quando a rota está certa mas a entrega vai para outro endereço, e isso precisa chegar na expedição. Pedidos em <code>RETIRAS</code>, <code>POS HORARIO</code> e <code>ANALISE CREDITO</code> não têm rota geográfica, então caem em “não deu para concluir”.
     </div>
   </div>
 </div>
 
 <div class="cortina oculto" id="cortina"><div class="caixa">Solte a planilha para conferir</div></div>
+<datalist id="lista-cidades"></datalist>
 
 <script>
 /* ================= normalização ================= */
 const norm = s => (s==null?"":String(s)).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim();
 const chaveCab = s => norm(s).replace(/[^A-Z0-9]/g,"").toLowerCase();
-const chavePed = s => norm(s).replace(/\D/g,"").replace(/^0+/,"");
-const TIPOS = /\b(RUA|R|AVENIDA|AV|AVN|ALAMEDA|AL|ESTRADA|EST|RODOVIA|ROD|TRAVESSA|TV|PRACA|VIA|LARGO|MARGINAL)\b/g;
-const RUIDO = new Set(["DE","DA","DO","DAS","DOS","NUM","NUMERO","CEP","BAIRRO","JARDIM","PARQUE","VILA","CIDADE","LOJA","COMPLEMENTO","QUADRA","LOTE","CASA","APTO","BLOCO"]);
-const tokens = s => norm(s).replace(/[^A-Z0-9 ]/g," ").replace(TIPOS," ").split(/\s+/).filter(t=>t.length>=3&&!RUIDO.has(t)&&!/^\d+$/.test(t));
-const bate = (a,b) => a===b || (a.length>=4&&b.length>=4&&(a.startsWith(b)||b.startsWith(a)));
 const cep8 = s => { const m = norm(s).match(/\b(\d{5})[.\-\s]?(\d{3})\b/); return m ? m[1]+m[2] : null; };
 const cepQualquer = s => cep8(s) || (norm(s).replace(/\D/g,"").length===8 ? norm(s).replace(/\D/g,"") : null);
-const numeros = s => norm(s).replace(/\b\d{5}[.\-\s]?\d{3}\b/g," ").replace(/[^0-9 ]/g," ").split(/\s+/)
-  .filter(x=>x&&x.length<=6).map(x=>x.replace(/^0+/,"")).filter(Boolean);
+const fmtCep = c => c ? c.slice(0,5)+"-"+c.slice(5) : null;
 
 /* ================= endereço declarado na observação ================= */
 const GATILHO = /(ENDERECO\s*(?:DE|DA|PARA|P\/)?\s*ENTREGA|LOCAL\s*(?:DE|DA)\s*ENTREGA|ENTREGA\s*(?:VAI\s*SER|SERA|E\s*NO|NO\s*ENDERECO)|ENTREGAR\s*(?:EM|NA|NO)\b|ENTREGA\s*:)/;
@@ -318,7 +330,7 @@ function extrairEndereco(obs){
   return t.length>=8 ? t : null;
 }
 
-/* ================= malha aprendida da central de vendas ================= */
+/* ================= malha aprendida do arquivo ================= */
 const APELIDOS = {"SBC":"SAO BERNARDO DO CAMPO","S B C":"SAO BERNARDO DO CAMPO","SAO BERNARDO":"SAO BERNARDO DO CAMPO",
   "SCS":"SAO CAETANO DO SUL","SAO CAETANO":"SAO CAETANO DO SUL","STO ANDRE":"SANTO ANDRE","S ANDRE":"SANTO ANDRE",
   "SJC":"SAO JOSE DOS CAMPOS","RGS":"RIO GRANDE DA SERRA","SJRP":"SAO JOSE DO RIO PRETO","GRU":"GUARULHOS","PG":"PRAIA GRANDE"};
@@ -344,56 +356,46 @@ function acharCidade(texto, vocab){
 }
 const topo = m => m ? [...m.entries()].sort((a,b)=>b[1]-a[1])[0][0] : null;
 
-/* ================= veredito: o romaneio está certo? ================= */
+/* ================= veredito ================= */
 function avaliar(r, malha){
   const rota = norm(r.rota);
   const cepD = cep8(r.decl), p3D = cepD ? cepD.slice(0,3) : null;
-  const cidD = acharCidade(r.decl, malha.vocab);
-  const cepR = cepQualquer(r.rom.cep) || cepQualquer(r.cep);
-  const p3R = cepR ? cepR.slice(0,3) : null;
-  const cidR = norm(r.rom.cidade || r.cidade);
-  const o = {cidD, cepD, motivos:[], sugestao:null};
+  const manual = r.cidadeManual ? norm(r.cidadeManual) : null;
+  const cidD = manual || acharCidade(r.decl, malha.vocab);
+  const cepC = cepQualquer(r.cep), p3C = cepC ? cepC.slice(0,3) : null;
+  const cidC = norm(r.cidade);
+  const o = {cidD, cepD, cepC, cidC, cidadeManual:manual, podeManual:false, motivos:[], sugestao:null};
+  const fecha = v => { o.veredito = v; if(manual) o.motivos.push("cidade informada manualmente"); return o; };
 
-  // 1. o romaneio já leva o endereço declarado?
-  if(cepD && cepR && cepD===cepR){ o.veredito="confere"; o.motivos.push("mesmo CEP do romaneio"); return o; }
-  const tR = tokens(r.rom.endereco), tD = tokens(r.decl);
-  const score = tR.length ? tR.filter(a=>tD.some(b=>bate(a,b))).length/tR.length : 0;
-  const nR = r.rom.nr ? norm(r.rom.nr).replace(/\D/g,"").replace(/^0+/,"") : null;
-  if(score>=0.5 && (!nR || numeros(r.decl).includes(nR))){ o.veredito="confere"; o.motivos.push("mesma rua e número do romaneio"); return o; }
-
-  // 2. divergiu. a rota do pedido ainda serve?
+  if(cepD && cepC && cepD===cepC){ o.motivos.push("mesmo CEP do cadastro"); return fecha("confere"); }
   if(!rota || NAOGEO.test(rota)){
-    o.veredito="indefinido";
-    o.motivos.push(rota ? `rota ${r.rota} não é geográfica, sem área para conferir` : "pedido sem rota na central de vendas");
+    o.motivos.push(rota ? `rota ${r.rota} não é geográfica, sem área para conferir` : "pedido sem rota");
     o.sugestao = topo(malha.cidRota.get(cidD)) || topo(malha.cepRota.get(p3D));
-    return o;
+    return fecha("indefinido");
   }
   const cobreCep = p3D && malha.rotaCep.get(rota)?.has(p3D);
   const cobreCid = cidD && malha.rotaCid.get(rota)?.has(cidD);
-  const mesmaCid = cidD && cidR && cidD===cidR;
-  const mesmoP3  = p3D && p3R && p3D===p3R;
+  const mesmaCid = cidD && cidC && cidD===cidC;
+  const mesmoP3  = p3D && p3C && p3D===p3C;
   if(cobreCep || cobreCid || mesmaCid || mesmoP3){
-    o.veredito = "endereco-divergente";
-    if(mesmoP3) o.motivos.push(`mesma faixa de CEP ${p3D}xx do romaneio`);
-    else if(mesmaCid) o.motivos.push(`mesma cidade do romaneio, ${cidD}`);
+    if(mesmoP3) o.motivos.push(`mesma faixa de CEP ${p3D}xx do cadastro`);
+    else if(mesmaCid) o.motivos.push(`mesma cidade do cadastro, ${cidD}`);
     else if(cobreCid) o.motivos.push(`${cidD} sai nesta rota`);
     else o.motivos.push(`CEP ${p3D}xx sai nesta rota`);
-    return o;
+    return fecha("endereco-divergente");
   }
-  if(!p3D && !cidD){ o.veredito="indefinido"; o.motivos.push("sem cidade nem CEP no texto da observação"); return o; }
-
-  o.veredito = "rota-errada";
-  o.motivos.push(cidD ? `entrega em ${cidD}` : `entrega no CEP ${cepD.slice(0,5)}-${cepD.slice(5)}`);
-  if(cidR && cidD!==cidR) o.motivos.push(`romaneio em ${cidR}`);
+  if(!p3D && !cidD){
+    o.podeManual = true;
+    o.motivos.push("sem cidade nem CEP no texto da observação");
+    return fecha("indefinido");
+  }
+  o.motivos.push(cidD ? `entrega em ${cidD}` : `entrega no CEP ${fmtCep(cepD)}`);
+  if(cidC && cidD!==cidC) o.motivos.push(`cadastro em ${cidC}`);
   o.sugestao = topo(malha.cidRota.get(cidD)) || topo(malha.cepRota.get(p3D));
-  return o;
+  return fecha("rota-errada");
 }
 
 /* ================= leitura ================= */
-function acharAba(wb, ...alvos){
-  for(const a of alvos){ const n = wb.SheetNames.find(s=>chaveCab(s).includes(a)); if(n) return n; }
-  return null;
-}
 function acharCabecalho(m, obrig){
   for(let i=0;i<Math.min(10,m.length);i++){
     const linha = (m[i]||[]).map(chaveCab); const mapa = {}; let falta = false;
@@ -405,53 +407,37 @@ function acharCabecalho(m, obrig){
 const opcional = (l,...n) => { for(const x of n){ const j = l.indexOf(x); if(j>=0) return j; } return -1; };
 const cel = (l,j) => (j>=0 && l[j]!=null && String(l[j]).trim()!=="") ? String(l[j]).trim() : "";
 
-let LINHAS = [], MALHA = null, RESUMO = "";
+let LINHAS = [], MALHA = null;
 function processar(wb){
-  const nRt = acharAba(wb,"rotas","rota");
-  const nCv = acharAba(wb,"centraldevendas","vendas");
-  if(!nRt) throw new Error(`Não achei a aba rotas — é ela que diz o que conferir. O arquivo tem: ${wb.SheetNames.join(" · ")}.`);
-  if(!nCv) throw new Error(`Não achei a aba da central de vendas — é dela que vem a Observação Interna. O arquivo tem: ${wb.SheetNames.join(" · ")}.`);
-
-  // referência: central de vendas
+  const nCv = wb.SheetNames.find(s=>chaveCab(s).includes("centraldevendas"))
+           || wb.SheetNames.find(s=>chaveCab(s).includes("vendas")) || wb.SheetNames[0];
   const cv = XLSX.utils.sheet_to_json(wb.Sheets[nCv],{header:1,raw:false,defval:null});
-  const hCv = acharCabecalho(cv,["pedido","cliente","observacaointerna"]);
-  if(!hCv) throw new Error(`Na aba “${nCv}” não encontrei Pedido, Cliente e Observação Interna nas primeiras linhas.`);
-  const jRota = opcional(hCv.linha,"rota"), jCep = opcional(hCv.linha,"cep"), jCid = opcional(hCv.linha,"cidade");
-  if(jCep<0 || jCid<0) throw new Error(`Na aba “${nCv}” faltam as colunas CEP e Cidade — elas são a base para saber a área de cada rota.`);
-  const central = new Map(); const brutas = [];
-  for(let i=hCv.i+1;i<cv.length;i++){
-    const l = cv[i]||[]; const p = cel(l,hCv.mapa.pedido); if(!p) continue;
-    const reg = {rota:cel(l,jRota), cep:cel(l,jCep), cidade:cel(l,jCid), obs:cel(l,hCv.mapa.observacaointerna)};
-    brutas.push(reg); central.set(chavePed(p), reg);
+  const h = acharCabecalho(cv,["pedido","cliente","observacaointerna"]);
+  if(!h) throw new Error(`Na aba “${nCv}” não encontrei os cabeçalhos Pedido, Cliente e Observação Interna nas primeiras linhas.`);
+  const jRota = opcional(h.linha,"rota"), jCep = opcional(h.linha,"cep"), jCid = opcional(h.linha,"cidade");
+  const faltando = [jCep<0?"CEP":null, jCid<0?"Cidade":null].filter(Boolean);
+  if(faltando.length) throw new Error(`Na aba “${nCv}” falta a coluna ${faltando.join(" e ")} — é com ela que a observação é conferida.`);
+
+  const brutas = [];
+  for(let i=h.i+1;i<cv.length;i++){
+    const l = cv[i]||[]; const ped = cel(l,h.mapa.pedido); if(!ped) continue;
+    brutas.push({pedido:ped, cliente:cel(l,h.mapa.cliente), rota:cel(l,jRota), cep:cel(l,jCep),
+      cidade:cel(l,jCid), obs:cel(l,h.mapa.observacaointerna)});
   }
   if(!brutas.length) throw new Error(`A aba “${nCv}” não trouxe nenhum pedido.`);
   MALHA = aprender(brutas);
+  document.getElementById("lista-cidades").innerHTML =
+    [...MALHA.vocab].sort().map(c=>`<option value="${esc(c)}">`).join("");
 
-  // universo: aba rotas
-  const rt = XLSX.utils.sheet_to_json(wb.Sheets[nRt],{header:1,raw:false,defval:null});
-  const hRt = acharCabecalho(rt,["nped","cliente","endereco"]);
-  if(!hRt) throw new Error(`Na aba “${nRt}” não encontrei N.Ped., Cliente e Endereço nas primeiras linhas.`);
-  const kNr = opcional(hRt.linha,"nr","numero","num"), kCep = opcional(hRt.linha,"cep");
-  const kBai = opcional(hRt.linha,"bairro"), kCid = opcional(hRt.linha,"cidade");
-
-  LINHAS = [];
-  for(let i=hRt.i+1;i<rt.length;i++){
-    const l = rt[i]||[]; const ped = cel(l,hRt.mapa.nped); if(!ped) continue;
-    const rom = {endereco:cel(l,hRt.mapa.endereco), nr:cel(l,kNr), cep:cel(l,kCep), bairro:cel(l,kBai), cidade:cel(l,kCid)};
-    const c = central.get(chavePed(ped));
-    const base = {pedido:ped, cliente:cel(l,hRt.mapa.cliente), rom,
-      rota:c?c.rota:"", cep:c?c.cep:"", cidade:c?c.cidade:"", obs:c?c.obs:"",
-      decl:null, veredito:"", motivos:[], sugestao:null};
-    if(!c){ LINHAS.push({...base, veredito:"sem-central", motivos:["pedido não encontrado na central de vendas"]}); continue; }
-    const decl = extrairEndereco(c.obs);
-    if(!decl){ LINHAS.push({...base, veredito:"sem-obs", motivos:["sem endereço na observação interna"]}); continue; }
-    LINHAS.push({...base, decl, ...avaliar({...base, decl}, MALHA)});
-  }
-  if(!LINHAS.length) throw new Error(`A aba “${nRt}” não trouxe nenhum pedido para conferir.`);
+  LINHAS = brutas.map(b=>{
+    const decl = extrairEndereco(b.obs);
+    const base = {...b, decl, veredito:"sem-obs", motivos:[], sugestao:null, cepC:cepQualquer(b.cep), cidC:norm(b.cidade)};
+    return decl ? {...base, ...avaliar({...b,decl}, MALHA)} : base;
+  });
 
   document.getElementById("fc-nome").textContent = wb._nome;
   document.getElementById("fc-qt").textContent =
-    `${LINHAS.length} na rota · ${brutas.length} na central · ${MALHA.rotaCid.size} rotas aprendidas`;
+    `${LINHAS.length} pedidos · ${LINHAS.filter(l=>l.decl).length} com endereço na obs · ${MALHA.rotaCid.size} rotas`;
   document.getElementById("ficha").classList.remove("oculto");
   document.getElementById("rot-btn").classList.add("oculto");
   document.getElementById("inicio").classList.add("oculto");
@@ -465,25 +451,41 @@ const IC = {
   a:`<svg viewBox="0 0 24 24"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>`,
   n:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .8c0 1.7-2.5 2.2-2.5 3.7M12 17.5h.01"/></svg>`
 };
-const SETA = `<svg class="seta" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>`;
 const SVG_BANNER = {
   c:`<path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/>`,
   a:`<path d="M12 8v5M12 16h.01"/><circle cx="12" cy="12" r="9"/>`,
   n:`<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .8c0 1.7-2.5 2.2-2.5 3.7M12 17.5h.01"/>`
 };
-const romTexto = r => [r.rom.endereco, r.rom.nr, r.rom.bairro, r.rom.cidade||r.cidade, r.rom.cep||r.cep].filter(Boolean).join(", ");
-function marcar(texto, ref){
-  return esc(texto).split(/(\s+)/).map(p=>{
-    const t = tokens(p)[0]; if(!t) return p;
-    return ref.some(x=>bate(x,t)) ? `<em>${p}</em>` : `<mark>${p}</mark>`;
-  }).join("");
+const SETA = `<svg class="seta" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>`;
+
+function confronto(r){
+  const marca = r.cidadeManual ? ` <i class="mm">informada</i>` : "";
+  const linha = (rot, a, b, cls, extra) => `<div class="lin ${cls}">
+      <span class="rot">${rot}</span>
+      <span class="vl ${a?"":"vazio"}">${esc(a||"não informado")}${extra||""}</span>
+      <span class="sin ${cls}">${cls==="ig"?"=":cls==="df"?"≠":"·"}</span>
+      <span class="vl ${b?"":"vazio"}">${esc(b||"não informado")}</span></div>`;
+  const cidCls = (!r.cidD||!r.cidC) ? "nd" : (r.cidD===r.cidC ? "ig" : "df");
+  const cepCls = (!r.cepD||!r.cepC) ? "nd" : (r.cepD===r.cepC ? "ig" : "df");
+  return `<div class="conf">
+    <div class="cab"><span>Campo</span><span>Observação interna</span><span></span><span>Cadastro do pedido</span></div>
+    ${linha("Endereço", r.decl, null, "end")}
+    ${linha("Cidade", r.cidD, r.cidC, cidCls, marca)}
+    ${linha("CEP", fmtCep(r.cepD), fmtCep(r.cepC), cepCls)}
+  </div>`;
 }
-function comparacao(r){
-  const rom = romTexto(r);
-  return `<div class="cmp">
-    <div class="lado foco"><div class="cab">Endereço na aba rotas <b>· vai no romaneio</b></div><div class="txt">${marcar(rom,tokens(r.decl))}</div></div>
-    <div class="meio">≠</div>
-    <div class="lado"><div class="cab">Observação interna <b>· o que foi combinado</b></div><div class="txt">${marcar(r.decl,tokens(rom))}</div></div>
+function blocoManual(r){
+  if(r.cidadeManual) return `<div class="tag-man">cidade informada: <b>${esc(r.cidadeManual)}</b>
+    <button class="mlimpar" data-ped="${esc(r.pedido)}" title="Limpar" aria-label="Limpar cidade informada">×</button></div>`;
+  if(!r.podeManual) return "";
+  const sug = norm(r.cidade);
+  return `<div class="manual" data-ped="${esc(r.pedido)}">
+    <div class="mlb">Informe a cidade da entrega</div>
+    <div class="mrow">
+      <input class="minput" list="lista-cidades" placeholder="Digite ou escolha uma cidade do arquivo" aria-label="Cidade da entrega">
+      <button class="btn fino maplicar">Aplicar</button>
+    </div>
+    ${sug?`<button class="chip msugestao" data-cid="${esc(sug)}">Usar <b>${esc(sug)}</b> · cidade do cadastro</button>`:""}
   </div>`;
 }
 function trilho(r, erro){
@@ -493,15 +495,12 @@ function trilho(r, erro){
   return `<div class="trilho ${erro?"err":(r.veredito==="endereco-divergente"?"ok":"")}">
     <div class="bl org"><div class="lb">Rota do pedido</div><div class="vl">${esc(r.rota||"—")}</div></div>${dst}</div>`;
 }
-const GRAU = {"rota-errada":["c","crítico"],"endereco-divergente":["a","atenção"],"indefinido":["n","verificar"],"sem-central":["n","verificar"]};
+const GRAU = {"rota-errada":["c","crítico"],"endereco-divergente":["a","atenção"],"indefinido":["n","verificar"]};
 function cartao(r,i){
   const [cl,gr] = GRAU[r.veredito];
   const frase = r.veredito==="rota-errada" ? "endereços divergentes, verificar se está na rota certa"
-    : r.veredito==="endereco-divergente" ? "endereços divergentes, corrigir o endereço antes de imprimir o romaneio"
-    : r.veredito==="sem-central" ? "pedido na rota sem correspondente na central de vendas"
+    : r.veredito==="endereco-divergente" ? "endereço de entrega diferente do cadastro, avisar a expedição"
     : "endereço na observação que o painel não conseguiu localizar";
-  const cmp = r.decl ? comparacao(r) : "";
-  const tr = r.veredito==="sem-central" ? "" : trilho(r, r.veredito==="rota-errada");
   return `<div class="aviso ${cl}" style="--i:${i||0}">
     <div class="selo-ic">${IC[cl]}</div>
     <div class="corpo">
@@ -510,26 +509,25 @@ function cartao(r,i){
       <div class="cli">cliente ${esc(r.cliente)}</div>
       <div class="banner">
         <svg class="bic" viewBox="0 0 24 24">${SVG_BANNER[cl]}</svg>
-        <div><div class="frase">${frase}</div>
-             <div class="porque">${esc(r.motivos.join(" · "))}</div></div>
+        <div><div class="frase">${frase}</div><div class="porque">${esc(r.motivos.join(" · "))}</div></div>
       </div>
-      ${tr}${cmp}
+      ${trilho(r, r.veredito==="rota-errada")}
+      ${confronto(r)}
+      ${blocoManual(r)}
     </div></div>`;
 }
 let FILTRO = "todos";
 function desenhar(){
   const c = v => LINHAS.filter(l=>l.veredito===v);
-  const cr = c("rota-errada"), at = c("endereco-divergente"), ok = c("confere");
-  const nt = [...c("indefinido"), ...c("sem-central")];
+  const cr = c("rota-errada"), at = c("endereco-divergente"), nt = c("indefinido"), ok = c("confere");
   const comObs = LINHAS.filter(l=>l.decl).length;
-  const limpos = ok.length + c("sem-obs").length;
 
   document.getElementById("indicadores").innerHTML = [
-    ["Pedidos na rota","todos",LINHAS.length,""],
+    ["Pedidos na central","todos",LINHAS.length,""],
     ["Com endereço na obs","comobs",comObs,""],
     ["Rota errada","rota-errada",cr.length,"c"],
-    ["Endereço divergente","endereco-divergente",at.length,"a"],
-    ["Sem pendência","limpos",limpos,"k"]
+    ["Endereço diferente","endereco-divergente",at.length,"a"],
+    ["Confere","confere",ok.length,"k"]
   ].map(([rot,f,v,cl])=>`<button class="ind ${cl} ${v?"tem":""} ${FILTRO===f?"ativo":""}" data-f="${f}">
       <div class="rot">${cl?'<span class="pt"></span>':""}${rot}</div><div class="val">${v}</div></button>`).join("");
   document.querySelectorAll(".ind").forEach(e=>e.onclick=()=>{FILTRO = FILTRO===e.dataset.f?"todos":e.dataset.f; desenhar();});
@@ -538,23 +536,20 @@ function desenhar(){
     document.getElementById("n-"+id).textContent = lista.length;
     document.getElementById("lista-"+id).innerHTML = lista.length ? lista.map(cartao).join("") : `<div class="nada calmo">${vazio}</div>`;
   };
-  secao("cr",cr,"Nenhum pedido da rota entrega fora da área dela.");
-  secao("at",at,"Nenhum endereço do romaneio diverge da observação interna.");
+  secao("cr",cr,"Nenhum pedido entrega fora da área da sua rota.");
+  secao("at",at,"Nenhuma observação aponta endereço diferente do cadastro.");
   document.getElementById("sec-nt").classList.toggle("oculto", !nt.length);
   secao("nt",nt,"");
   tabela();
 }
-const PIL = {"rota-errada":["c","rota errada"],"endereco-divergente":["a","endereço divergente"],
-  "indefinido":["n","verificar"],"sem-central":["n","fora da central"],
-  "confere":["k","confere"],"sem-obs":["z","nada a conciliar"]};
+const PIL = {"rota-errada":["c","rota errada"],"endereco-divergente":["a","endereço diferente"],
+  "indefinido":["n","verificar"],"confere":["k","confere"]};
 function tabela(){
   const b = norm(document.getElementById("busca").value);
-  let l = LINHAS.slice();
-  if(["rota-errada","endereco-divergente"].includes(FILTRO)) l = l.filter(r=>r.veredito===FILTRO);
-  if(FILTRO==="comobs") l = l.filter(r=>r.decl);
-  if(FILTRO==="limpos") l = l.filter(r=>r.veredito==="confere"||r.veredito==="sem-obs");
-  if(b) l = l.filter(r=>norm(r.pedido+" "+r.cliente+" "+r.rota+" "+r.cidade+" "+(r.rom.cidade||"")).includes(b));
-  const ord = {"rota-errada":0,"indefinido":1,"sem-central":1,"endereco-divergente":2,"confere":3,"sem-obs":4};
+  let l = LINHAS.filter(r=>r.decl);
+  if(["rota-errada","endereco-divergente","confere"].includes(FILTRO)) l = l.filter(r=>r.veredito===FILTRO);
+  if(b) l = l.filter(r=>norm(r.pedido+" "+r.cliente+" "+r.rota+" "+r.cidade+" "+(r.cidD||"")).includes(b));
+  const ord = {"rota-errada":0,"indefinido":1,"endereco-divergente":2,"confere":3};
   l.sort((a,z)=>ord[a.veredito]-ord[z.veredito]);
   document.getElementById("n-tab").textContent = l.length;
   document.getElementById("vazio").classList.toggle("oculto", l.length>0);
@@ -564,13 +559,40 @@ function tabela(){
       <td class="mono">${esc(r.pedido)}</td>
       <td class="corta" title="${esc(r.cliente)}">${esc(r.cliente)}</td>
       <td><span class="pil ${cl}"><span class="pt"></span>${txt}</span></td>
-      <td class="mono corta" title="${esc(romTexto(r))}">${esc(romTexto(r))}</td>
-      <td class="mono corta" style="color:${r.decl?"var(--tinta)":"var(--tinta-3)"}" title="${esc(r.decl||"")}">${esc(r.decl||"—")}</td>
+      <td class="mono corta" title="${esc(r.decl)}">${esc(r.decl)}</td>
+      <td class="corta" style="color:var(--tinta-2)" title="${esc(r.cidade)}">${esc(r.cidade||"—")}</td>
+      <td class="mono" style="color:var(--tinta-2)">${esc(fmtCep(r.cepC)||"—")}</td>
       <td class="mono corta" style="color:var(--tinta-2)" title="${esc(r.rota)}">${esc(r.rota||"—")}</td>
       <td class="mono corta" style="color:${r.sugestao?"var(--ok)":"var(--tinta-3)"}" title="${esc(r.sugestao||"")}">${esc(r.sugestao||"—")}</td>
     </tr>`;
   }).join("");
 }
+
+/* ================= cidade informada à mão ================= */
+function aplicarCidade(ped, cidade){
+  const cid = norm(cidade);
+  const i = LINHAS.findIndex(x=>x.pedido===ped);
+  if(i<0) return;
+  const r = LINHAS[i];
+  if(cid && !MALHA.vocab.has(cid)) MALHA.vocab.add(cid);
+  const base = {...r, cidadeManual: cid || null};
+  LINHAS[i] = {...base, ...avaliar(base, MALHA)};
+  desenhar();
+}
+document.addEventListener("click", e => {
+  const ap = e.target.closest(".maplicar");
+  if(ap){ const b = ap.closest(".manual"); aplicarCidade(b.dataset.ped, b.querySelector(".minput").value); return; }
+  const sg = e.target.closest(".msugestao");
+  if(sg){ aplicarCidade(sg.closest(".manual").dataset.ped, sg.dataset.cid); return; }
+  const lp = e.target.closest(".mlimpar");
+  if(lp){ aplicarCidade(lp.dataset.ped, ""); return; }
+});
+document.addEventListener("keydown", e => {
+  if(e.key!=="Enter" || !e.target.classList?.contains("minput")) return;
+  e.preventDefault();
+  const b = e.target.closest(".manual");
+  aplicarCidade(b.dataset.ped, e.target.value);
+});
 
 /* ================= eventos ================= */
 const cortina = document.getElementById("cortina");
@@ -585,12 +607,13 @@ document.getElementById("arquivo").addEventListener("change",e=>{ const f = e.ta
 document.getElementById("trocar").addEventListener("click",()=>document.getElementById("arquivo").click());
 document.getElementById("busca").addEventListener("input",tabela);
 document.getElementById("csv").addEventListener("click",()=>{
-  const linhas = [["N.Ped.","Cliente","Situacao","Motivo","Endereco na aba rotas","Endereco na observacao","Rota","Rota sugerida"]]
-    .concat(LINHAS.map(r=>[r.pedido,r.cliente,PIL[r.veredito][1],r.motivos.join(" / "),romTexto(r),r.decl||"",r.rota,r.sugestao||""]));
+  const l = LINHAS.filter(r=>r.decl);
+  const linhas = [["Pedido","Cliente","Situacao","Motivo","Endereco na observacao","Cidade declarada","CEP declarado","Cidade do pedido","CEP do pedido","Rota","Rota sugerida"]]
+    .concat(l.map(r=>[r.pedido,r.cliente,PIL[r.veredito][1],r.motivos.join(" / "),r.decl,r.cidD||"",fmtCep(r.cepD)||"",r.cidade,fmtCep(r.cepC)||"",r.rota,r.sugestao||""]));
   const csv = "\ufeff"+linhas.map(x=>x.map(v=>`"${String(v||"").replace(/"/g,'""')}"`).join(";")).join("\r\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download = "conferencia_rota.csv"; a.click(); URL.revokeObjectURL(a.href);
+  a.download = "conferencia_endereco.csv"; a.click(); URL.revokeObjectURL(a.href);
 });
 function ler(file){
   document.getElementById("erro").innerHTML = "";
