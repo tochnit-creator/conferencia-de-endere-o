@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conferência da rota montada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --tela:#F5F6F7; --cartao:#FFFFFF; --borda:#E7E9EC; --borda-fraca:#F1F2F4; --sutil:#FAFBFB;
+    --tinta:#191C1F; --tinta-2:#616870; --tinta-3:#98A0A8;
+    --acento:#31506F; --acento-fraco:#EFF3F7;
+    --cr:#A3423C; --cr-bg:#FDF7F6; --cr-bd:#EEDCD9; --cr-mk:#F8E4E1;
+    --at:#8A6520; --at-bg:#FDFAF5; --at-bd:#EDE2CD;
+    --ok:#2C6E52; --ok-bg:#F3F8F5; --ok-bd:#D6E8DF; --ok-mk:#E7F2EC;
+    --nt:#4A5A6B; --nt-bg:#F6F8F9; --nt-bd:#E1E6EA;
+    --s1:0 1px 2px rgba(16,24,40,.05);
+    --s2:0 1px 2px rgba(16,24,40,.04), 0 4px 12px -4px rgba(16,24,40,.06);
+    --ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --dado:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{overflow-x:hidden}
+  body{background:var(--tela);color:var(--tinta);font-family:var(--ui);font-size:13px;line-height:1.5;
+       -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  .quadro{max-width:1140px;margin:0 auto;padding:0 20px 72px}
+  .oculto{display:none !important}
+  button{font:inherit;color:inherit}
+
+  .barra{display:flex;align-items:center;gap:13px;padding:16px 0;flex-wrap:wrap}
+  .glifo{width:27px;height:27px;border-radius:8px;background:var(--acento);display:grid;place-items:center;flex:none;box-shadow:var(--s1)}
+  .glifo svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .tit h1{font-size:13.5px;font-weight:600;letter-spacing:-.012em;line-height:1.3}
+  .tit p{font-size:11.5px;color:var(--tinta-3);margin-top:1px}
+  .direita{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+  .ficha{display:flex;align-items:center;gap:9px;background:var(--cartao);border:1px solid var(--borda);
+         border-radius:8px;padding:5px 6px 5px 11px;max-width:min(440px,54vw);box-shadow:var(--s1)}
+  .ficha .nm{font-family:var(--dado);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ficha .qt{font-size:10.5px;color:var(--tinta-3);white-space:nowrap}
+  .ficha .sep{width:1px;height:14px;background:var(--borda);flex:none}
+  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--borda);background:var(--cartao);
+       border-radius:8px;padding:7px 12px;font-size:12px;font-weight:450;cursor:pointer;box-shadow:var(--s1);
+       transition:border-color .14s,background .14s;white-space:nowrap}
+  .btn:hover{border-color:#D6DBE0;background:var(--sutil)}
+  .btn:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+  .btn svg{width:13px;height:13px;stroke:var(--tinta-2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .btn.fino{padding:5px 9px;font-size:11.5px;color:var(--tinta-2);box-shadow:none}
+  input[type=file]{display:none}
+
+  .inicio{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;box-shadow:var(--s2);
+          padding:56px 32px;text-align:center;margin-top:8px}
+  .inicio .ic{width:42px;height:42px;border-radius:11px;background:var(--acento-fraco);display:grid;place-items:center;margin:0 auto 16px}
+  .inicio .ic svg{width:19px;height:19px;stroke:var(--acento);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .inicio h2{font-size:15px;font-weight:600;letter-spacing:-.015em}
+  .inicio p{font-size:12.5px;color:var(--tinta-2);margin:6px auto 20px;max-width:430px}
+  .exige{margin:24px auto 0;max-width:490px;border-top:1px solid var(--borda-fraca);padding-top:16px;display:grid;gap:8px;text-align:left}
+  .exige .lin{display:flex;gap:10px;align-items:baseline;font-size:11px;min-width:0}
+  .exige .ab{font-family:var(--dado);background:var(--tela);border:1px solid var(--borda);border-radius:5px;padding:1px 6px;flex:none;font-size:10.5px}
+  .exige .cl{color:var(--tinta-3);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .indicadores{display:grid;grid-template-columns:repeat(5,1fr);background:var(--cartao);border:1px solid var(--borda);
+               border-radius:14px;box-shadow:var(--s2);overflow:hidden;margin-top:8px}
+  .ind{padding:15px 16px;border-right:1px solid var(--borda-fraca);cursor:pointer;position:relative;
+       transition:background .14s;text-align:left;background:none;border-top:none;border-bottom:none;border-left:none}
+  .ind:last-child{border-right:none}
+  .ind:hover{background:var(--sutil)}
+  .ind:focus-visible{outline:2px solid var(--acento);outline-offset:-2px}
+  .ind::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--acento);opacity:0;transition:opacity .14s}
+  .ind.ativo::after{opacity:1}
+  .ind.ativo{background:#FBFCFD}
+  .ind .rot{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;display:flex;align-items:center;gap:6px}
+  .ind .pt{width:5px;height:5px;border-radius:50%;flex:none}
+  .ind .val{font-size:25px;font-weight:500;letter-spacing:-.035em;margin-top:8px;line-height:1}
+  .ind.c .pt{background:var(--cr)} .ind.c.tem .val{color:var(--cr)}
+  .ind.a .pt{background:var(--at)} .ind.a.tem .val{color:var(--at)}
+  .ind.k .pt{background:var(--ok)} .ind.k.tem .val{color:var(--ok)}
+
+  section{margin-top:26px}
+  .cab-sec{display:flex;align-items:center;gap:9px;margin-bottom:11px;padding:0 2px;flex-wrap:wrap}
+  .cab-sec h3{font-size:12.5px;font-weight:600;letter-spacing:-.01em}
+  .cab-sec .n{font-family:var(--dado);font-size:10.5px;color:var(--tinta-2);background:var(--cartao);
+              border:1px solid var(--borda);border-radius:20px;padding:1px 8px}
+  .cab-sec .dica{margin-left:auto;font-size:11px;color:var(--tinta-3)}
+
+  @keyframes entra{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  @keyframes halo-c{0%{box-shadow:0 0 0 0 rgba(163,66,60,.30)}70%{box-shadow:0 0 0 9px rgba(163,66,60,0)}100%{box-shadow:0 0 0 0 rgba(163,66,60,0)}}
+  @keyframes halo-a{0%{box-shadow:0 0 0 0 rgba(138,101,32,.26)}70%{box-shadow:0 0 0 9px rgba(138,101,32,0)}100%{box-shadow:0 0 0 0 rgba(138,101,32,0)}}
+  @keyframes piscar{0%,100%{opacity:1}50%{opacity:.2}}
+  @keyframes varre{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+  .aviso{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;box-shadow:var(--s2);
+         padding:16px;margin-bottom:9px;display:grid;grid-template-columns:34px 1fr;gap:13px;
+         transition:box-shadow .16s,border-color .16s;animation:entra .38s cubic-bezier(.2,.7,.3,1) both;
+         animation-delay:calc(var(--i,0) * 70ms);position:relative;overflow:hidden}
+  .aviso:hover{box-shadow:0 1px 2px rgba(16,24,40,.05), 0 10px 26px -8px rgba(16,24,40,.11)}
+  .aviso.c{border-color:var(--cr-bd)}
+  .aviso.c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cr)}
+  .aviso.a{border-color:var(--at-bd)}
+  .aviso.a::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--at)}
+
+  .selo-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+  .selo-ic svg{width:16px;height:16px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .aviso.c .selo-ic{background:var(--cr-bg);border:1px solid var(--cr-bd);animation:halo-c 2s ease-out infinite}
+  .aviso.c .selo-ic svg{stroke:var(--cr)}
+  .aviso.a .selo-ic{background:var(--at-bg);border:1px solid var(--at-bd);animation:halo-a 2.6s ease-out infinite}
+  .aviso.a .selo-ic svg{stroke:var(--at)}
+  .aviso.n .selo-ic{background:var(--nt-bg);border:1px solid var(--nt-bd)} .aviso.n .selo-ic svg{stroke:var(--nt)}
+
+  .corpo{min-width:0}
+  .linha1{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .ped{font-family:var(--dado);font-size:13.5px;font-weight:500;letter-spacing:-.02em}
+  .grau{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+        font-weight:600;border:1px solid;border-radius:20px;padding:3px 9px;margin-left:auto}
+  .grau .pt{width:5px;height:5px;border-radius:50%;background:currentColor;animation:piscar 1.8s ease-in-out infinite}
+  .aviso.c .grau{color:var(--cr);border-color:var(--cr-bd);background:var(--cr-bg)}
+  .aviso.a .grau{color:var(--at);border-color:var(--at-bd);background:var(--at-bg)}
+  .aviso.n .grau{color:var(--nt);border-color:var(--nt-bd);background:var(--nt-bg)}
+  .aviso.n .grau .pt{animation:none}
+  .cli{font-size:12.5px;color:var(--tinta-2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* banner de ação */
+  .banner{margin-top:12px;border:1px solid;border-left-width:3px;border-radius:10px;padding:12px 14px;
+          display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;position:relative;overflow:hidden}
+  .banner .bic{width:16px;height:16px;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+  .frase{font-size:14px;font-weight:600;letter-spacing:-.012em;line-height:1.4}
+  .porque{font-size:12px;margin-top:4px;opacity:.82;font-weight:450}
+  .banner::after{content:"";position:absolute;inset:0;pointer-events:none;
+                 background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+                 animation:varre 3.4s ease-in-out infinite}
+  .aviso.c .banner{color:var(--cr);background:var(--cr-bg);border-color:var(--cr-bd)}
+  .aviso.c .banner .bic{stroke:var(--cr)}
+  .aviso.a .banner{color:var(--at);background:var(--at-bg);border-color:var(--at-bd)}
+  .aviso.a .banner .bic{stroke:var(--at)}
+  .aviso.n .banner{color:var(--nt);background:var(--nt-bg);border-color:var(--nt-bd)}
+  .aviso.n .banner .bic{stroke:var(--nt)}
+  .aviso.n .banner::after{animation:none}
+
+  .trilho{margin-top:12px;display:inline-flex;align-items:center;gap:10px;background:var(--sutil);
+          border:1px solid var(--borda);border-radius:9px;padding:8px 11px;flex-wrap:wrap}
+  .trilho .bl{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .trilho .lb{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500}
+  .trilho .vl{font-family:var(--dado);font-size:11.5px;font-weight:500}
+  .trilho .seta{width:14px;height:14px;stroke:var(--tinta-3);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .trilho .bl.dst .vl{color:var(--ok)}
+  .trilho.err .bl.org .vl{color:var(--cr);text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:var(--cr-bd)}
+  .trilho.ok .bl.org .vl{color:var(--ok)}
+
+  .cmp{margin-top:12px;border:1px solid var(--borda);border-radius:10px;display:grid;
+       grid-template-columns:1fr auto 1fr;align-items:stretch;overflow:hidden}
+  .lado{padding:11px 13px;background:var(--cartao);min-width:0}
+  .lado.foco{background:var(--cr-bg)}
+  .lado .cab{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;margin-bottom:6px;
+             display:flex;align-items:center;gap:5px}
+  .lado .cab b{font-weight:500;color:var(--tinta-2);font-family:var(--dado);font-size:9px}
+  .lado .txt{font-family:var(--dado);font-size:11.5px;line-height:1.75;word-break:break-word}
+  .meio{width:28px;background:var(--sutil);border-left:1px solid var(--borda);border-right:1px solid var(--borda);
+        display:grid;place-items:center;font-size:11px;color:var(--tinta-3);font-family:var(--dado)}
+  .lado mark{background:var(--cr-mk);color:var(--cr);padding:1px 3px;border-radius:3px;font-weight:500}
+  .lado em{background:var(--ok-mk);color:var(--ok);font-style:normal;padding:1px 3px;border-radius:3px}
+  @media(max-width:780px){
+    .cmp{grid-template-columns:1fr}
+    .meio{width:auto;height:24px;border:none;border-top:1px solid var(--borda);border-bottom:1px solid var(--borda)}
+    .indicadores{grid-template-columns:repeat(2,1fr)}
+    .ind{border-bottom:1px solid var(--borda-fraca)}
+    .aviso{grid-template-columns:1fr}.selo-ic{display:none}
+  }
+
+  .painel{background:var(--cartao);border:1px solid var(--borda);border-radius:14px;box-shadow:var(--s2);overflow:hidden}
+  .ferramentas{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--borda-fraca);flex-wrap:wrap}
+  .campo{position:relative;flex:1;min-width:170px}
+  .campo svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--tinta-3);fill:none;stroke-width:1.6}
+  .busca{width:100%;border:1px solid var(--borda);border-radius:8px;padding:7px 10px 7px 29px;font-family:var(--ui);
+         font-size:12px;color:var(--tinta);background:var(--tela)}
+  .busca::placeholder{color:var(--tinta-3)}
+  .busca:focus{outline:none;border-color:var(--acento);background:#fff}
+  .rolagem{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:900px}
+  thead th{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-3);font-weight:500;text-align:left;
+           padding:9px 12px;background:var(--sutil);border-bottom:1px solid var(--borda-fraca);position:sticky;top:0;z-index:2}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--borda-fraca);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--sutil)}
+  .mono{font-family:var(--dado);font-size:11.5px}
+  .corta{max-width:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pil{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:450;padding:2px 8px;border:1px solid;border-radius:20px;white-space:nowrap}
+  .pil .pt{width:5px;height:5px;border-radius:50%;flex:none}
+  .pil.c{color:var(--cr);border-color:var(--cr-bd);background:var(--cr-bg)} .pil.c .pt{background:var(--cr)}
+  .pil.a{color:var(--at);border-color:var(--at-bd);background:var(--at-bg)} .pil.a .pt{background:var(--at)}
+  .pil.k{color:var(--ok);border-color:var(--ok-bd);background:var(--ok-bg)} .pil.k .pt{background:var(--ok)}
+  .pil.n{color:var(--nt);border-color:var(--nt-bd);background:var(--nt-bg)} .pil.n .pt{background:var(--nt)}
+  .pil.z{color:var(--tinta-3);border-color:var(--borda);background:var(--tela)} .pil.z .pt{background:var(--tinta-3)}
+  .nada{padding:30px;text-align:center;color:var(--tinta-3);font-size:12px}
+  .nada.calmo{background:var(--cartao);border:1px solid var(--borda);border-radius:12px;box-shadow:var(--s1)}
+  .erro{background:var(--cr-bg);border:1px solid var(--cr-bd);border-radius:12px;padding:14px 16px;margin-top:8px;font-size:12.5px}
+  .erro b{color:var(--cr)}
+  .rodape{margin-top:30px;font-size:11px;color:var(--tinta-3);line-height:1.85;padding:0 2px}
+  .rodape b{color:var(--tinta-2);font-weight:500}
+  .rodape code{font-family:var(--dado);font-size:10.5px;color:var(--tinta-2)}
+  .cortina{position:fixed;inset:0;background:rgba(245,246,247,.84);backdrop-filter:blur(3px);z-index:50;display:grid;place-items:center;pointer-events:none}
+  .cortina .caixa{border:1.5px dashed var(--acento);border-radius:14px;background:var(--cartao);padding:26px 40px;
+                  font-size:13px;font-weight:500;box-shadow:0 10px 34px rgba(16,24,40,.1)}
+  @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="quadro">
+
+  <div class="barra">
+    <div class="glifo"><svg viewBox="0 0 24 24"><path d="M4 7h7M4 12h5M4 17h7"/><path d="M15 5l5 5-5 5"/><path d="M20 10h-7"/></svg></div>
+    <div class="tit">
+      <h1>Conferência da rota montada</h1>
+      <p>Endereço da aba rotas × Observação Interna da central de vendas</p>
+    </div>
+    <div class="direita">
+      <div class="ficha oculto" id="ficha">
+        <span class="nm" id="fc-nome"></span><span class="sep"></span><span class="qt" id="fc-qt"></span>
+        <button class="btn fino" id="trocar">Trocar</button>
+      </div>
+      <label class="btn" for="arquivo" id="rot-btn">
+        <svg viewBox="0 0 24 24"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+        Importar planilha
+      </label>
+      <input type="file" id="arquivo" accept=".xlsx,.xlsm,.xls">
+    </div>
+  </div>
+
+  <div class="inicio" id="inicio">
+    <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></div>
+    <h2>Importe a planilha para conferir a rota</h2>
+    <p>A leitura acontece no seu navegador. O arquivo não sai daqui.</p>
+    <label class="btn" for="arquivo">
+      <svg viewBox="0 0 24 24"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+      Importar planilha
+    </label>
+    <div class="exige">
+      <div class="lin"><span class="ab">rotas</span><span class="cl">o que será conferido — N.Ped. · Cliente · Endereço</span></div>
+      <div class="lin"><span class="ab">centralde vendas</span><span class="cl">a referência — Pedido · Observação Interna · Rota · CEP · Cidade</span></div>
+    </div>
+  </div>
+
+  <div id="erro"></div>
+
+  <div id="saida" class="oculto">
+    <div class="indicadores" id="indicadores"></div>
+
+    <section id="sec-cr">
+      <div class="cab-sec"><h3>Rota errada</h3><span class="n" id="n-cr"></span>
+        <span class="dica">a entrega é fora da área que a rota atende</span></div>
+      <div id="lista-cr"></div>
+    </section>
+
+    <section id="sec-at">
+      <div class="cab-sec"><h3>Endereço do romaneio divergente</h3><span class="n" id="n-at"></span>
+        <span class="dica">a rota está certa, o endereço impresso não</span></div>
+      <div id="lista-at"></div>
+    </section>
+
+    <section id="sec-nt">
+      <div class="cab-sec"><h3>Não deu para concluir</h3><span class="n" id="n-nt"></span>
+        <span class="dica">precisa de olhada humana</span></div>
+      <div id="lista-nt"></div>
+    </section>
+
+    <section>
+      <div class="cab-sec"><h3>Pedidos da rota</h3><span class="n" id="n-tab"></span>
+        <span class="dica"><button class="btn fino" id="csv">Baixar em CSV</button></span></div>
+      <div class="painel">
+        <div class="ferramentas">
+          <div class="campo">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input class="busca" id="busca" placeholder="Buscar por pedido, cliente, rota ou cidade">
+          </div>
+        </div>
+        <div class="rolagem">
+          <table><thead><tr>
+            <th style="width:100px">N.Ped.</th><th style="width:20%">Cliente</th><th style="width:130px">Situação</th>
+            <th style="width:26%">Endereço na aba rotas</th><th style="width:26%">Endereço na observação</th>
+            <th style="width:115px">Rota</th><th style="width:115px">Rota sugerida</th>
+          </tr></thead><tbody id="corpo"></tbody></table>
+        </div>
+        <div class="nada oculto" id="vazio">Nenhum pedido corresponde ao filtro.</div>
+      </div>
+    </section>
+
+    <div class="rodape">
+      <b>O que é conferido.</b> Só os pedidos da aba <code>rotas</code> — é a rota que você está montando. A central de vendas entra como referência: de lá vem a Observação Interna de cada pedido e, do arquivo inteiro, a malha de rotas.<br>
+      <b>A malha</b> é aprendida na hora: para cada rota, quais cidades e faixas de CEP aparecem na central de vendas. Por isso o painel sabe dizer que uma entrega em Santo André não cabe numa rota que só passa em Mauá e São Paulo — e qual rota levaria.<br>
+      <b>Rota errada</b> é quando a área da entrega não bate com a rota do pedido. <b>Endereço do romaneio divergente</b> é quando a rota está certa mas o endereço impresso é o do cadastro, e não o que o vendedor combinou. Casamento por <code>N.Ped.</code> ↔ <code>Pedido</code>, só pelos dígitos.
+    </div>
+  </div>
+</div>
+
+<div class="cortina oculto" id="cortina"><div class="caixa">Solte a planilha para conferir</div></div>
+
+<script>
+/* ================= normalização ================= */
+const norm = s => (s==null?"":String(s)).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim();
+const chaveCab = s => norm(s).replace(/[^A-Z0-9]/g,"").toLowerCase();
+const chavePed = s => norm(s).replace(/\D/g,"").replace(/^0+/,"");
+const TIPOS = /\b(RUA|R|AVENIDA|AV|AVN|ALAMEDA|AL|ESTRADA|EST|RODOVIA|ROD|TRAVESSA|TV|PRACA|VIA|LARGO|MARGINAL)\b/g;
+const RUIDO = new Set(["DE","DA","DO","DAS","DOS","NUM","NUMERO","CEP","BAIRRO","JARDIM","PARQUE","VILA","CIDADE","LOJA","COMPLEMENTO","QUADRA","LOTE","CASA","APTO","BLOCO"]);
+const tokens = s => norm(s).replace(/[^A-Z0-9 ]/g," ").replace(TIPOS," ").split(/\s+/).filter(t=>t.length>=3&&!RUIDO.has(t)&&!/^\d+$/.test(t));
+const bate = (a,b) => a===b || (a.length>=4&&b.length>=4&&(a.startsWith(b)||b.startsWith(a)));
+const cep8 = s => { const m = norm(s).match(/\b(\d{5})[.\-\s]?(\d{3})\b/); return m ? m[1]+m[2] : null; };
+const cepQualquer = s => cep8(s) || (norm(s).replace(/\D/g,"").length===8 ? norm(s).replace(/\D/g,"") : null);
+const numeros = s => norm(s).replace(/\b\d{5}[.\-\s]?\d{3}\b/g," ").replace(/[^0-9 ]/g," ").split(/\s+/)
+  .filter(x=>x&&x.length<=6).map(x=>x.replace(/^0+/,"")).filter(Boolean);
+
+/* ================= endereço declarado na observação ================= */
+const GATILHO = /(ENDERECO\s*(?:DE|DA|PARA|P\/)?\s*ENTREGA|LOCAL\s*(?:DE|DA)\s*ENTREGA|ENTREGA\s*(?:VAI\s*SER|SERA|E\s*NO|NO\s*ENDERECO)|ENTREGAR\s*(?:EM|NA|NO)\b|ENTREGA\s*:)/;
+function extrairEndereco(obs){
+  const n = norm(obs); const m = GATILHO.exec(n); if(!m) return null;
+  let t = n.slice(m.index+m[0].length).replace(/^\s*(VAI\s*SER|SERA|FICA|E)?\s*[:.\-–,]*\s*/,"");
+  t = t.split(/\s(?:OBS|OBSERVACAO|FATURAR|PAGAMENTO|CONSULTA DE ESTOQUE|COMPROVANTE)\b/)[0].slice(0,180).trim();
+  return t.length>=8 ? t : null;
+}
+
+/* ================= malha aprendida da central de vendas ================= */
+const APELIDOS = {"SBC":"SAO BERNARDO DO CAMPO","S B C":"SAO BERNARDO DO CAMPO","SAO BERNARDO":"SAO BERNARDO DO CAMPO",
+  "SCS":"SAO CAETANO DO SUL","SAO CAETANO":"SAO CAETANO DO SUL","STO ANDRE":"SANTO ANDRE","S ANDRE":"SANTO ANDRE",
+  "SJC":"SAO JOSE DOS CAMPOS","RGS":"RIO GRANDE DA SERRA","SJRP":"SAO JOSE DO RIO PRETO","GRU":"GUARULHOS","PG":"PRAIA GRANDE"};
+const NAOGEO = /RETIRA|POS HORARIO|ANALISE|CREDITO|SEM ROTA/;
+function aprender(linhas){
+  const rotaCid=new Map(), rotaCep=new Map(), cidRota=new Map(), cepRota=new Map(), vocab=new Set();
+  const add=(m,k,v)=>{ if(!k||!v) return; if(!m.has(k)) m.set(k,new Map()); const c=m.get(k); c.set(v,(c.get(v)||0)+1); };
+  for(const l of linhas){
+    const r=norm(l.rota), c=norm(l.cidade), p=norm(l.cep).replace(/\D/g,"").slice(0,3);
+    if(c) vocab.add(c);
+    if(!r || NAOGEO.test(r)) continue;
+    add(rotaCid,r,c); add(rotaCep,r,p); add(cidRota,c,r); add(cepRota,p,r);
+  }
+  return {rotaCid,rotaCep,cidRota,cepRota,vocab};
+}
+function acharCidade(texto, vocab){
+  const t = " "+norm(texto).replace(/[.,;]/g," ")+" ";
+  let melhor = null;
+  for(const c of vocab){ if(c.length<4) continue; if(t.includes(" "+c+" ") && (!melhor||c.length>melhor.length)) melhor=c; }
+  if(melhor) return melhor;
+  for(const [ap,cid] of Object.entries(APELIDOS)) if(t.includes(" "+ap+" ")) return cid;
+  return null;
+}
+const topo = m => m ? [...m.entries()].sort((a,b)=>b[1]-a[1])[0][0] : null;
+
+/* ================= veredito: o romaneio está certo? ================= */
+function avaliar(r, malha){
+  const rota = norm(r.rota);
+  const cepD = cep8(r.decl), p3D = cepD ? cepD.slice(0,3) : null;
+  const cidD = acharCidade(r.decl, malha.vocab);
+  const cepR = cepQualquer(r.rom.cep) || cepQualquer(r.cep);
+  const p3R = cepR ? cepR.slice(0,3) : null;
+  const cidR = norm(r.rom.cidade || r.cidade);
+  const o = {cidD, cepD, motivos:[], sugestao:null};
+
+  // 1. o romaneio já leva o endereço declarado?
+  if(cepD && cepR && cepD===cepR){ o.veredito="confere"; o.motivos.push("mesmo CEP do romaneio"); return o; }
+  const tR = tokens(r.rom.endereco), tD = tokens(r.decl);
+  const score = tR.length ? tR.filter(a=>tD.some(b=>bate(a,b))).length/tR.length : 0;
+  const nR = r.rom.nr ? norm(r.rom.nr).replace(/\D/g,"").replace(/^0+/,"") : null;
+  if(score>=0.5 && (!nR || numeros(r.decl).includes(nR))){ o.veredito="confere"; o.motivos.push("mesma rua e número do romaneio"); return o; }
+
+  // 2. divergiu. a rota do pedido ainda serve?
+  if(!rota || NAOGEO.test(rota)){
+    o.veredito="indefinido";
+    o.motivos.push(rota ? `rota ${r.rota} não é geográfica, sem área para conferir` : "pedido sem rota na central de vendas");
+    o.sugestao = topo(malha.cidRota.get(cidD)) || topo(malha.cepRota.get(p3D));
+    return o;
+  }
+  const cobreCep = p3D && malha.rotaCep.get(rota)?.has(p3D);
+  const cobreCid = cidD && malha.rotaCid.get(rota)?.has(cidD);
+  const mesmaCid = cidD && cidR && cidD===cidR;
+  const mesmoP3  = p3D && p3R && p3D===p3R;
+  if(cobreCep || cobreCid || mesmaCid || mesmoP3){
+    o.veredito = "endereco-divergente";
+    if(mesmoP3) o.motivos.push(`mesma faixa de CEP ${p3D}xx do romaneio`);
+    else if(mesmaCid) o.motivos.push(`mesma cidade do romaneio, ${cidD}`);
+    else if(cobreCid) o.motivos.push(`${cidD} sai nesta rota`);
+    else o.motivos.push(`CEP ${p3D}xx sai nesta rota`);
+    return o;
+  }
+  if(!p3D && !cidD){ o.veredito="indefinido"; o.motivos.push("sem cidade nem CEP no texto da observação"); return o; }
+
+  o.veredito = "rota-errada";
+  o.motivos.push(cidD ? `entrega em ${cidD}` : `entrega no CEP ${cepD.slice(0,5)}-${cepD.slice(5)}`);
+  if(cidR && cidD!==cidR) o.motivos.push(`romaneio em ${cidR}`);
+  o.sugestao = topo(malha.cidRota.get(cidD)) || topo(malha.cepRota.get(p3D));
+  return o;
+}
+
+/* ================= leitura ================= */
+function acharAba(wb, ...alvos){
+  for(const a of alvos){ const n = wb.SheetNames.find(s=>chaveCab(s).includes(a)); if(n) return n; }
+  return null;
+}
+function acharCabecalho(m, obrig){
+  for(let i=0;i<Math.min(10,m.length);i++){
+    const linha = (m[i]||[]).map(chaveCab); const mapa = {}; let falta = false;
+    for(const o of obrig){ const j = linha.indexOf(o); if(j<0){falta=true;break;} mapa[o]=j; }
+    if(!falta) return {i,linha,mapa};
+  }
+  return null;
+}
+const opcional = (l,...n) => { for(const x of n){ const j = l.indexOf(x); if(j>=0) return j; } return -1; };
+const cel = (l,j) => (j>=0 && l[j]!=null && String(l[j]).trim()!=="") ? String(l[j]).trim() : "";
+
+let LINHAS = [], MALHA = null, RESUMO = "";
+function processar(wb){
+  const nRt = acharAba(wb,"rotas","rota");
+  const nCv = acharAba(wb,"centraldevendas","vendas");
+  if(!nRt) throw new Error(`Não achei a aba rotas — é ela que diz o que conferir. O arquivo tem: ${wb.SheetNames.join(" · ")}.`);
+  if(!nCv) throw new Error(`Não achei a aba da central de vendas — é dela que vem a Observação Interna. O arquivo tem: ${wb.SheetNames.join(" · ")}.`);
+
+  // referência: central de vendas
+  const cv = XLSX.utils.sheet_to_json(wb.Sheets[nCv],{header:1,raw:false,defval:null});
+  const hCv = acharCabecalho(cv,["pedido","cliente","observacaointerna"]);
+  if(!hCv) throw new Error(`Na aba “${nCv}” não encontrei Pedido, Cliente e Observação Interna nas primeiras linhas.`);
+  const jRota = opcional(hCv.linha,"rota"), jCep = opcional(hCv.linha,"cep"), jCid = opcional(hCv.linha,"cidade");
+  if(jCep<0 || jCid<0) throw new Error(`Na aba “${nCv}” faltam as colunas CEP e Cidade — elas são a base para saber a área de cada rota.`);
+  const central = new Map(); const brutas = [];
+  for(let i=hCv.i+1;i<cv.length;i++){
+    const l = cv[i]||[]; const p = cel(l,hCv.mapa.pedido); if(!p) continue;
+    const reg = {rota:cel(l,jRota), cep:cel(l,jCep), cidade:cel(l,jCid), obs:cel(l,hCv.mapa.observacaointerna)};
+    brutas.push(reg); central.set(chavePed(p), reg);
+  }
+  if(!brutas.length) throw new Error(`A aba “${nCv}” não trouxe nenhum pedido.`);
+  MALHA = aprender(brutas);
+
+  // universo: aba rotas
+  const rt = XLSX.utils.sheet_to_json(wb.Sheets[nRt],{header:1,raw:false,defval:null});
+  const hRt = acharCabecalho(rt,["nped","cliente","endereco"]);
+  if(!hRt) throw new Error(`Na aba “${nRt}” não encontrei N.Ped., Cliente e Endereço nas primeiras linhas.`);
+  const kNr = opcional(hRt.linha,"nr","numero","num"), kCep = opcional(hRt.linha,"cep");
+  const kBai = opcional(hRt.linha,"bairro"), kCid = opcional(hRt.linha,"cidade");
+
+  LINHAS = [];
+  for(let i=hRt.i+1;i<rt.length;i++){
+    const l = rt[i]||[]; const ped = cel(l,hRt.mapa.nped); if(!ped) continue;
+    const rom = {endereco:cel(l,hRt.mapa.endereco), nr:cel(l,kNr), cep:cel(l,kCep), bairro:cel(l,kBai), cidade:cel(l,kCid)};
+    const c = central.get(chavePed(ped));
+    const base = {pedido:ped, cliente:cel(l,hRt.mapa.cliente), rom,
+      rota:c?c.rota:"", cep:c?c.cep:"", cidade:c?c.cidade:"", obs:c?c.obs:"",
+      decl:null, veredito:"", motivos:[], sugestao:null};
+    if(!c){ LINHAS.push({...base, veredito:"sem-central", motivos:["pedido não encontrado na central de vendas"]}); continue; }
+    const decl = extrairEndereco(c.obs);
+    if(!decl){ LINHAS.push({...base, veredito:"sem-obs", motivos:["sem endereço na observação interna"]}); continue; }
+    LINHAS.push({...base, decl, ...avaliar({...base, decl}, MALHA)});
+  }
+  if(!LINHAS.length) throw new Error(`A aba “${nRt}” não trouxe nenhum pedido para conferir.`);
+
+  document.getElementById("fc-nome").textContent = wb._nome;
+  document.getElementById("fc-qt").textContent =
+    `${LINHAS.length} na rota · ${brutas.length} na central · ${MALHA.rotaCid.size} rotas aprendidas`;
+  document.getElementById("ficha").classList.remove("oculto");
+  document.getElementById("rot-btn").classList.add("oculto");
+  document.getElementById("inicio").classList.add("oculto");
+  desenhar();
+}
+
+/* ================= apresentação ================= */
+const esc = s => String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const IC = {
+  c:`<svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>`,
+  a:`<svg viewBox="0 0 24 24"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>`,
+  n:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .8c0 1.7-2.5 2.2-2.5 3.7M12 17.5h.01"/></svg>`
+};
+const SETA = `<svg class="seta" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>`;
+const SVG_BANNER = {
+  c:`<path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.5 18a2 2 0 001.7 3h15.6a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/>`,
+  a:`<path d="M12 8v5M12 16h.01"/><circle cx="12" cy="12" r="9"/>`,
+  n:`<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .8c0 1.7-2.5 2.2-2.5 3.7M12 17.5h.01"/>`
+};
+const romTexto = r => [r.rom.endereco, r.rom.nr, r.rom.bairro, r.rom.cidade||r.cidade, r.rom.cep||r.cep].filter(Boolean).join(", ");
+function marcar(texto, ref){
+  return esc(texto).split(/(\s+)/).map(p=>{
+    const t = tokens(p)[0]; if(!t) return p;
+    return ref.some(x=>bate(x,t)) ? `<em>${p}</em>` : `<mark>${p}</mark>`;
+  }).join("");
+}
+function comparacao(r){
+  const rom = romTexto(r);
+  return `<div class="cmp">
+    <div class="lado foco"><div class="cab">Endereço na aba rotas <b>· vai no romaneio</b></div><div class="txt">${marcar(rom,tokens(r.decl))}</div></div>
+    <div class="meio">≠</div>
+    <div class="lado"><div class="cab">Observação interna <b>· o que foi combinado</b></div><div class="txt">${marcar(r.decl,tokens(rom))}</div></div>
+  </div>`;
+}
+function trilho(r, erro){
+  const dst = r.sugestao
+    ? `${SETA}<div class="bl dst"><div class="lb">${erro?"Sai neste arquivo em":"Rota da área"}</div><div class="vl">${esc(r.sugestao)}</div></div>`
+    : (erro ? `${SETA}<div class="bl"><div class="lb">Sugerida</div><div class="vl" style="color:var(--tinta-3)">nenhuma rota deste arquivo atende</div></div>` : "");
+  return `<div class="trilho ${erro?"err":(r.veredito==="endereco-divergente"?"ok":"")}">
+    <div class="bl org"><div class="lb">Rota do pedido</div><div class="vl">${esc(r.rota||"—")}</div></div>${dst}</div>`;
+}
+const GRAU = {"rota-errada":["c","crítico"],"endereco-divergente":["a","atenção"],"indefinido":["n","verificar"],"sem-central":["n","verificar"]};
+function cartao(r,i){
+  const [cl,gr] = GRAU[r.veredito];
+  const frase = r.veredito==="rota-errada" ? "endereços divergentes, verificar se está na rota certa"
+    : r.veredito==="endereco-divergente" ? "endereços divergentes, corrigir o endereço antes de imprimir o romaneio"
+    : r.veredito==="sem-central" ? "pedido na rota sem correspondente na central de vendas"
+    : "endereço na observação que o painel não conseguiu localizar";
+  const cmp = r.decl ? comparacao(r) : "";
+  const tr = r.veredito==="sem-central" ? "" : trilho(r, r.veredito==="rota-errada");
+  return `<div class="aviso ${cl}" style="--i:${i||0}">
+    <div class="selo-ic">${IC[cl]}</div>
+    <div class="corpo">
+      <div class="linha1"><span class="ped">Pedido ${esc(r.pedido)}</span>
+        <span class="grau"><span class="pt"></span>${gr}</span></div>
+      <div class="cli">cliente ${esc(r.cliente)}</div>
+      <div class="banner">
+        <svg class="bic" viewBox="0 0 24 24">${SVG_BANNER[cl]}</svg>
+        <div><div class="frase">${frase}</div>
+             <div class="porque">${esc(r.motivos.join(" · "))}</div></div>
+      </div>
+      ${tr}${cmp}
+    </div></div>`;
+}
+let FILTRO = "todos";
+function desenhar(){
+  const c = v => LINHAS.filter(l=>l.veredito===v);
+  const cr = c("rota-errada"), at = c("endereco-divergente"), ok = c("confere");
+  const nt = [...c("indefinido"), ...c("sem-central")];
+  const comObs = LINHAS.filter(l=>l.decl).length;
+  const limpos = ok.length + c("sem-obs").length;
+
+  document.getElementById("indicadores").innerHTML = [
+    ["Pedidos na rota","todos",LINHAS.length,""],
+    ["Com endereço na obs","comobs",comObs,""],
+    ["Rota errada","rota-errada",cr.length,"c"],
+    ["Endereço divergente","endereco-divergente",at.length,"a"],
+    ["Sem pendência","limpos",limpos,"k"]
+  ].map(([rot,f,v,cl])=>`<button class="ind ${cl} ${v?"tem":""} ${FILTRO===f?"ativo":""}" data-f="${f}">
+      <div class="rot">${cl?'<span class="pt"></span>':""}${rot}</div><div class="val">${v}</div></button>`).join("");
+  document.querySelectorAll(".ind").forEach(e=>e.onclick=()=>{FILTRO = FILTRO===e.dataset.f?"todos":e.dataset.f; desenhar();});
+
+  const secao = (id,lista,vazio)=>{
+    document.getElementById("n-"+id).textContent = lista.length;
+    document.getElementById("lista-"+id).innerHTML = lista.length ? lista.map(cartao).join("") : `<div class="nada calmo">${vazio}</div>`;
+  };
+  secao("cr",cr,"Nenhum pedido da rota entrega fora da área dela.");
+  secao("at",at,"Nenhum endereço do romaneio diverge da observação interna.");
+  document.getElementById("sec-nt").classList.toggle("oculto", !nt.length);
+  secao("nt",nt,"");
+  tabela();
+}
+const PIL = {"rota-errada":["c","rota errada"],"endereco-divergente":["a","endereço divergente"],
+  "indefinido":["n","verificar"],"sem-central":["n","fora da central"],
+  "confere":["k","confere"],"sem-obs":["z","nada a conciliar"]};
+function tabela(){
+  const b = norm(document.getElementById("busca").value);
+  let l = LINHAS.slice();
+  if(["rota-errada","endereco-divergente"].includes(FILTRO)) l = l.filter(r=>r.veredito===FILTRO);
+  if(FILTRO==="comobs") l = l.filter(r=>r.decl);
+  if(FILTRO==="limpos") l = l.filter(r=>r.veredito==="confere"||r.veredito==="sem-obs");
+  if(b) l = l.filter(r=>norm(r.pedido+" "+r.cliente+" "+r.rota+" "+r.cidade+" "+(r.rom.cidade||"")).includes(b));
+  const ord = {"rota-errada":0,"indefinido":1,"sem-central":1,"endereco-divergente":2,"confere":3,"sem-obs":4};
+  l.sort((a,z)=>ord[a.veredito]-ord[z.veredito]);
+  document.getElementById("n-tab").textContent = l.length;
+  document.getElementById("vazio").classList.toggle("oculto", l.length>0);
+  document.getElementById("corpo").innerHTML = l.map(r=>{
+    const [cl,txt] = PIL[r.veredito];
+    return `<tr>
+      <td class="mono">${esc(r.pedido)}</td>
+      <td class="corta" title="${esc(r.cliente)}">${esc(r.cliente)}</td>
+      <td><span class="pil ${cl}"><span class="pt"></span>${txt}</span></td>
+      <td class="mono corta" title="${esc(romTexto(r))}">${esc(romTexto(r))}</td>
+      <td class="mono corta" style="color:${r.decl?"var(--tinta)":"var(--tinta-3)"}" title="${esc(r.decl||"")}">${esc(r.decl||"—")}</td>
+      <td class="mono corta" style="color:var(--tinta-2)" title="${esc(r.rota)}">${esc(r.rota||"—")}</td>
+      <td class="mono corta" style="color:${r.sugestao?"var(--ok)":"var(--tinta-3)"}" title="${esc(r.sugestao||"")}">${esc(r.sugestao||"—")}</td>
+    </tr>`;
+  }).join("");
+}
+
+/* ================= eventos ================= */
+const cortina = document.getElementById("cortina");
+let arr = 0;
+window.addEventListener("dragenter",e=>{ if(!e.dataTransfer?.types?.includes("Files")) return;
+  e.preventDefault(); arr++; cortina.classList.remove("oculto"); });
+window.addEventListener("dragover",e=>{ if(e.dataTransfer?.types?.includes("Files")) e.preventDefault(); });
+window.addEventListener("dragleave",()=>{ if(--arr<=0){ arr=0; cortina.classList.add("oculto"); } });
+window.addEventListener("drop",e=>{ e.preventDefault(); arr=0; cortina.classList.add("oculto");
+  const f = e.dataTransfer.files[0]; if(f) ler(f); });
+document.getElementById("arquivo").addEventListener("change",e=>{ const f = e.target.files[0]; if(f) ler(f); });
+document.getElementById("trocar").addEventListener("click",()=>document.getElementById("arquivo").click());
+document.getElementById("busca").addEventListener("input",tabela);
+document.getElementById("csv").addEventListener("click",()=>{
+  const linhas = [["N.Ped.","Cliente","Situacao","Motivo","Endereco na aba rotas","Endereco na observacao","Rota","Rota sugerida"]]
+    .concat(LINHAS.map(r=>[r.pedido,r.cliente,PIL[r.veredito][1],r.motivos.join(" / "),romTexto(r),r.decl||"",r.rota,r.sugestao||""]));
+  const csv = "\ufeff"+linhas.map(x=>x.map(v=>`"${String(v||"").replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download = "conferencia_rota.csv"; a.click(); URL.revokeObjectURL(a.href);
+});
+function ler(file){
+  document.getElementById("erro").innerHTML = "";
+  const fr = new FileReader();
+  fr.onload = e => {
+    try{
+      const wb = XLSX.read(new Uint8Array(e.target.result),{type:"array"});
+      wb._nome = file.name; processar(wb);
+      document.getElementById("saida").classList.remove("oculto");
+    }catch(err){
+      document.getElementById("saida").classList.add("oculto");
+      document.getElementById("inicio").classList.remove("oculto");
+      document.getElementById("erro").innerHTML = `<div class="erro"><b>Não foi possível ler o arquivo.</b><br>${esc(err.message)}</div>`;
+    }
+  };
+  fr.onerror = () => { document.getElementById("erro").innerHTML = `<div class="erro"><b>Falha ao abrir o arquivo.</b> Tente selecionar de novo.</div>`; };
+  fr.readAsArrayBuffer(file);
+}
+</script>
+</body>
+</html>
